@@ -9,7 +9,7 @@ A comprehensive web-based Blood Bank Management System designed to streamline bl
 
 ---
 
-## 🚀 New Features (Version 2.0)
+## 🚀 Features (Version 2.0)
 
 ### ✨ Auto-Confirmation System
 
@@ -37,26 +37,6 @@ A comprehensive web-based Blood Bank Management System designed to streamline bl
 - **Streamlined donor request system** with auto-forwarding
 - **Better error handling** and user feedback
 - **Professional footer** with developer information
-
----
-
-## 📸 Screenshots
-
-### Homepage
-
-![homepage snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/homepage.png?raw=true)
-
-### Admin Dashboard
-
-![dashboard snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/admindashboard.png?raw=true)
-
-### Blood Donation
-
-![invoice snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/blooddonation.png?raw=true)
-
-### Blood Request
-
-![doctor snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/bloodrequest.png?raw=true)
 
 ---
 
@@ -202,14 +182,40 @@ A comprehensive web-based Blood Bank Management System designed to streamline bl
 ```
 bloodbankmanagement-master/
 ├── blood/                    # Blood management app
+│   ├── models.py            # Blood request and stock models
+│   ├── views.py             # Admin dashboard and blood management views
+│   ├── urls.py              # Blood app URL patterns
+│   └── admin.py             # Admin interface configuration
 ├── donor/                    # Donor management app
+│   ├── models.py            # Donor and donation models
+│   ├── views.py             # Donor dashboard and donation views
+│   ├── forms.py             # Donation and donor forms
+│   ├── urls.py              # Donor app URL patterns
+│   └── admin.py             # Admin interface configuration
 ├── patient/                  # Patient management app
+│   ├── models.py            # Patient model
+│   ├── views.py             # Patient dashboard and request views
+│   ├── forms.py             # Patient forms
+│   ├── urls.py              # Patient app URL patterns
+│   └── admin.py             # Admin interface configuration
 ├── bloodbankmanagement/      # Main project settings
+│   ├── settings.py          # Django settings configuration
+│   ├── urls.py              # Main URL patterns
+│   └── wsgi.py              # WSGI configuration
 ├── templates/                # HTML templates
-├── static/                   # CSS, JS, images
+│   ├── blood/               # Blood management templates
+│   ├── donor/               # Donor templates
+│   ├── patient/             # Patient templates
+│   └── admin/               # Admin templates
+├── static/                   # Static files
+│   ├── css/                 # Stylesheets
+│   ├── js/                  # JavaScript files
+│   ├── image/               # Images and icons
+│   ├── profile_pic/         # User profile pictures
+│   └── vendor/              # Third-party libraries
 ├── env/                      # Virtual environment
 ├── db.sqlite3               # Database file
-├── manage.py                # Django management
+├── manage.py                # Django management script
 ├── requirements.txt          # Python dependencies
 ├── README.md                # Project documentation
 ├── LICENSE                  # License file
@@ -218,9 +224,123 @@ bloodbankmanagement-master/
 
 ---
 
+## 🚀 Quick Start Guide
+
+### For Developers
+
+1. **Setup Environment**
+
+   ```bash
+   python -m venv env
+   env\Scripts\activate  # Windows
+   source env/bin/activate  # macOS/Linux
+   pip install -r requirements.txt
+   ```
+
+2. **Database Setup**
+
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+
+3. **Run Development Server**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+4. **Access Application**
+   - Open browser and go to: `http://127.0.0.1:8000/`
+   - Admin panel: `http://127.0.0.1:8000/admin/`
+
+### For Users
+
+1. **Admin Access**
+
+   - Login with superuser credentials
+   - Manage donors, patients, and blood requests
+   - Monitor system statistics
+
+2. **Donor Registration**
+
+   - Visit the homepage
+   - Click "Donor Signup"
+   - Complete registration form
+   - Start donating blood
+
+3. **Patient Registration**
+   - Visit the homepage
+   - Click "Patient Signup"
+   - Complete registration form
+   - Request blood when needed
+
+---
+
+## 🔧 Configuration
+
+### Email Settings (Optional)
+
+To enable email notifications, update the email settings in `bloodbankmanagement/settings.py`:
+
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'your-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your-app-password'
+```
+
+### Static Files
+
+The project uses Django's static file handling. For production, consider using a CDN or web server for static files.
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Migration Errors**
+
+   ```bash
+   python manage.py makemigrations --empty blood donor patient
+   python manage.py migrate
+   ```
+
+2. **Static Files Not Loading**
+
+   ```bash
+   python manage.py collectstatic
+   ```
+
+3. **Port Already in Use**
+
+   ```bash
+   python manage.py runserver 8001
+   ```
+
+4. **Virtual Environment Issues**
+   ```bash
+   deactivate  # Exit current environment
+   python -m venv env --clear  # Recreate environment
+   ```
+
+---
+
 ## 🤝 Contributing
 
 This project is developed and maintained by **Minhajul Abedin**. For contributions, suggestions, or bug reports, please contact the developer.
+
+### Development Guidelines
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ---
 
@@ -250,4 +370,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Saving Lives Through Technology & Innovation** 🩸
+## 📞 Support
+
+For support, questions, or feature requests, please contact the developer or create an issue in the repository.
+
+**Made with ❤️ by Minhajul Abedin**
