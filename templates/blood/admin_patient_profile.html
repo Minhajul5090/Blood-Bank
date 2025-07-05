@@ -1,0 +1,334 @@
+{% extends 'blood/adminbase.html' %} {% block content %} {% load static %}
+
+<style>
+  .admin-patient-profile-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 0;
+  }
+
+  .profile-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 900px;
+    overflow: hidden;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .profile-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .profile-header p {
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+  }
+
+  .profile-body {
+    padding: 40px;
+  }
+
+  .profile-section {
+    margin-bottom: 40px;
+  }
+
+  .profile-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+  }
+
+  .profile-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+
+  .info-group {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+
+  .info-value {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .profile-pic-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #667eea;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .fallback-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    border: 5px solid #667eea;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+  }
+
+  .request-history {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .request-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  .request-table th,
+  .request-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .request-table th {
+    background: #667eea;
+    color: white;
+    font-weight: 600;
+  }
+
+  .request-table tr:hover {
+    background: #e9ecef;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-approved {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .back-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: 768px) {
+    .profile-info {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-body {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="admin-patient-profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <h1><i class="fas fa-user-injured"></i> Patient Profile</h1>
+      <p>View patient information and request history</p>
+    </div>
+
+    <div class="profile-body">
+      <!-- Profile Picture -->
+      <div class="profile-pic-section">
+        {% if patient.profile_pic %}
+        <img
+          src="{{ patient.profile_pic.url }}"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        {% else %}
+        <div class="fallback-avatar">{{ patient.get_name|first|upper }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Patient Information -->
+      <div class="profile-section">
+        <h3><i class="fas fa-info-circle"></i> Patient Information</h3>
+        <div class="profile-info">
+          <div class="info-group">
+            <div class="info-label">Full Name</div>
+            <div class="info-value">{{ patient.get_name }}</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Age</div>
+            <div class="info-value">{{ patient.age }} years</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Blood Group</div>
+            <div class="info-value">{{ patient.bloodgroup }}</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Mobile</div>
+            <div class="info-value">{{ patient.mobile }}</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Disease/Condition</div>
+            <div class="info-value">{{ patient.disease|default:"None" }}</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Doctor</div>
+            <div class="info-value">
+              {{ patient.doctorname|default:"Not specified" }}
+            </div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Address</div>
+            <div class="info-value">{{ patient.address }}</div>
+          </div>
+
+          <div class="info-group">
+            <div class="info-label">Last Updated</div>
+            <div class="info-value">
+              {{ patient.last_updated|date:"M d, Y H:i" }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request History -->
+      <div class="profile-section">
+        <h3><i class="fas fa-history"></i> Blood Request History</h3>
+        <div class="request-history">
+          {% if requests %}
+          <table class="request-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in requests %}
+              <tr>
+                <td>{{ request.date|date:"M d, Y" }}</td>
+                <td>{{ request.bloodgroup }}</td>
+                <td>{{ request.unit }} units</td>
+                <td>
+                  <span class="status-badge status-{{ request.status|lower }}">
+                    {{ request.status }}
+                  </span>
+                </td>
+                <td>{{ request.reason|default:"-" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <h4>No Blood Requests</h4>
+            <p>This patient hasn't made any blood requests yet.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div style="text-align: center; margin-top: 30px">
+        <a href="{% url 'admin-patient' %}" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Patient List
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+developed By : sumit kumar
+facebook : fb.com/sumit.luv
+youtube : youtube.com/lazycoders
+-->
+{% endblock content %}

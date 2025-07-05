@@ -1,0 +1,530 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donor Registration - Blood Bank Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
+      rel="stylesheet"
+    />
+
+    <!-- Main CSS -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" media="all" />
+
+    <style>
+      .form-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      .form-section h4 {
+        color: #2c3e50;
+        border-bottom: 2px solid #e74c3c;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      .field-help {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+      }
+
+      .required-field::after {
+        content: " *";
+        color: #dc3545;
+      }
+
+      .form-row {
+        margin-bottom: 20px;
+      }
+
+      .btn-register {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        border: none;
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+      }
+
+      .alert {
+        border-radius: 10px;
+        border: none;
+      }
+
+      .profile-pic-preview {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 50%;
+        border: 3px solid #e74c3c;
+        margin-top: 10px;
+      }
+
+      .password-strength {
+        margin-top: 5px;
+        font-size: 0.85rem;
+      }
+
+      .strength-weak {
+        color: #dc3545;
+      }
+      .strength-medium {
+        color: #ffc107;
+      }
+      .strength-strong {
+        color: #28a745;
+      }
+    </style>
+  </head>
+
+  <body>
+    {% include "blood/navbar.html" %}
+
+    <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
+      <div class="wrapper wrapper--w790">
+        <br /><br /><br />
+        <div class="card card-5">
+          <div class="card-heading">
+            <h2 class="title">
+              <i class="fas fa-heart text-danger mr-2"></i>
+              Donor Registration
+            </h2>
+            <p class="text-muted">Register to donate blood and save lives</p>
+          </div>
+
+          <div class="card-body">
+            <!-- Error Messages -->
+            {% if userForm.errors or donorForm.errors %}
+            <div
+              class="alert alert-danger alert-dismissible fade show"
+              role="alert"
+            >
+              <i class="fas fa-exclamation-triangle mr-2"></i>
+              Please correct the errors below:
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %} {% if messages %} {% for message in messages %}
+            <div
+              class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+              role="alert"
+            >
+              <i
+                class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} mr-2"
+              ></i>
+              {{ message }}
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endfor %} {% endif %}
+
+            <form
+              method="POST"
+              enctype="multipart/form-data"
+              id="donorRegistrationForm"
+            >
+              {% csrf_token %}
+
+              <!-- Personal Information Section -->
+              <div class="form-section">
+                <h4><i class="fas fa-user mr-2"></i>Personal Information</h4>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">First Name</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.first_name }}</div>
+                        {% if userForm.first_name.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.first_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.first_name.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Last Name</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.last_name }}</div>
+                        {% if userForm.last_name.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.last_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.last_name.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Username</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.username }}</div>
+                        {% if userForm.username.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.username.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.username.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Email</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.email }}</div>
+                        {% if userForm.email.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.email.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.email.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Password</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.password1 }}</div>
+                        {% if userForm.password1.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.password1.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.password1.help_text }}
+                        </div>
+                        <div
+                          class="password-strength"
+                          id="password-strength"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Confirm Password</div>
+                      <div class="value">
+                        <div class="input-group">{{ userForm.password2 }}</div>
+                        {% if userForm.password2.errors %}
+                        <div class="text-danger small">
+                          {{ userForm.password2.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ userForm.password2.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Donor Information Section -->
+              <div class="form-section">
+                <h4><i class="fas fa-heartbeat mr-2"></i>Donor Information</h4>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Blood Group</div>
+                      <div class="value">
+                        <div class="input-group">
+                          {{ donorForm.bloodgroup }}
+                        </div>
+                        {% if donorForm.bloodgroup.errors %}
+                        <div class="text-danger small">
+                          {{ donorForm.bloodgroup.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ donorForm.bloodgroup.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Age</div>
+                      <div class="value">
+                        <div class="input-group">{{ donorForm.age }}</div>
+                        {% if donorForm.age.errors %}
+                        <div class="text-danger small">
+                          {{ donorForm.age.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ donorForm.age.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Phone Number</div>
+                      <div class="value">
+                        <div class="input-group">{{ donorForm.mobile }}</div>
+                        {% if donorForm.mobile.errors %}
+                        <div class="text-danger small">
+                          {{ donorForm.mobile.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ donorForm.mobile.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name required-field">Address</div>
+                      <div class="value">
+                        <div class="input-group">{{ donorForm.address }}</div>
+                        {% if donorForm.address.errors %}
+                        <div class="text-danger small">
+                          {{ donorForm.address.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ donorForm.address.help_text }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-row">
+                      <div class="name">Profile Picture</div>
+                      <div class="value">
+                        <div class="input-group">
+                          {{ donorForm.profile_pic }}
+                        </div>
+                        {% if donorForm.profile_pic.errors %}
+                        <div class="text-danger small">
+                          {{ donorForm.profile_pic.errors.0 }}
+                        </div>
+                        {% endif %}
+                        <div class="field-help">
+                          {{ donorForm.profile_pic.help_text }}
+                        </div>
+                        <div id="profile-pic-preview"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Terms and Conditions -->
+              <div class="form-section">
+                <div class="form-row">
+                  <div class="col-12">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="terms"
+                        required
+                      />
+                      <label class="custom-control-label" for="terms">
+                        I agree to the
+                        <a href="#" class="text-danger">Terms and Conditions</a>
+                        and <a href="#" class="text-danger">Privacy Policy</a>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-row">
+                <div class="col-12 text-center">
+                  <button class="btn btn-register btn-lg" type="submit">
+                    <i class="fas fa-heart mr-2"></i>
+                    Register as Donor
+                  </button>
+                </div>
+              </div>
+
+              <!-- Login Link -->
+              <div class="form-row">
+                <div class="col-12 text-center">
+                  <p class="text-muted">
+                    Already have an account?
+                    <a href="{% url 'donorlogin' %}" class="text-danger">
+                      <i class="fas fa-sign-in-alt mr-1"></i>
+                      Login here
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // Profile picture preview
+      document
+        .querySelector('input[type="file"]')
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const preview = document.getElementById("profile-pic-preview");
+              preview.innerHTML = `<img src="${e.target.result}" class="profile-pic-preview" alt="Profile Preview">`;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+      // Password strength meter
+      document
+        .querySelector('input[name="password1"]')
+        .addEventListener("input", function (e) {
+          const password = e.target.value;
+          const strengthDiv = document.getElementById("password-strength");
+          let strength = 0;
+          let message = "";
+
+          if (password.length >= 8) strength++;
+          if (/[a-z]/.test(password)) strength++;
+          if (/[A-Z]/.test(password)) strength++;
+          if (/[0-9]/.test(password)) strength++;
+          if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+          switch (strength) {
+            case 0:
+            case 1:
+              message = '<span class="strength-weak">Very Weak</span>';
+              break;
+            case 2:
+              message = '<span class="strength-weak">Weak</span>';
+              break;
+            case 3:
+              message = '<span class="strength-medium">Medium</span>';
+              break;
+            case 4:
+              message = '<span class="strength-strong">Strong</span>';
+              break;
+            case 5:
+              message = '<span class="strength-strong">Very Strong</span>';
+              break;
+          }
+
+          strengthDiv.innerHTML = `Password Strength: ${message}`;
+        });
+
+      // Form validation
+      document
+        .getElementById("donorRegistrationForm")
+        .addEventListener("submit", function (e) {
+          const password = document.querySelector(
+            'input[name="password1"]'
+          ).value;
+          const password2 = document.querySelector(
+            'input[name="password2"]'
+          ).value;
+
+          if (password !== password2) {
+            e.preventDefault();
+            alert("Passwords do not match!");
+            return false;
+          }
+
+          // Check if terms are accepted
+          const termsCheckbox = document.getElementById("terms");
+          if (!termsCheckbox.checked) {
+            e.preventDefault();
+            alert("Please accept the Terms and Conditions to continue.");
+            return false;
+          }
+        });
+    </script>
+  </body>
+</html>

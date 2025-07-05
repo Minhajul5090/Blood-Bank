@@ -1,0 +1,416 @@
+{% extends 'blood/adminbase.html' %} {% block content %}
+
+<style>
+  .donor-profile-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .profile-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+  }
+
+  .profile-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-name {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-role {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-body {
+    padding: 30px;
+  }
+
+  .info-section {
+    margin-bottom: 30px;
+  }
+
+  .section-title {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 10px;
+  }
+
+  .section-title i {
+    color: #667eea;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .info-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+  }
+
+  .info-label {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .info-value {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .blood-group-badge {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .history-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .history-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .history-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .history-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .history-table tr:hover {
+    background: #f8f9fa;
+  }
+
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .status-approved {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .btn-back {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: 768px) {
+    .donor-profile-container {
+      padding: 15px;
+    }
+
+    .profile-header {
+      padding: 20px;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .history-table {
+      overflow-x: auto;
+    }
+  }
+</style>
+
+<div class="donor-profile-container">
+  <a href="{% url 'admin-donor' %}" class="btn-back">
+    <i class="fas fa-arrow-left"></i> Back to Donors
+  </a>
+
+  <div class="profile-card">
+    <div class="profile-header">
+      {% if donor.profile_pic %}
+      <img
+        src="{{ donor.profile_pic.url }}"
+        alt="Profile Picture"
+        class="profile-pic"
+      />
+      {% else %}
+      <div
+        style="
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 3rem;
+          font-weight: bold;
+          margin: 0 auto 15px;
+          border: 4px solid white;
+        "
+      >
+        {{ donor.get_name|first|upper }}
+      </div>
+      {% endif %}
+      <div class="profile-name">{{ donor.get_name }}</div>
+      <div class="profile-role">Blood Donor</div>
+    </div>
+
+    <div class="profile-body">
+      <!-- Personal Information -->
+      <div class="info-section">
+        <h2 class="section-title">
+          <i class="fas fa-user"></i> Personal Information
+        </h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-label">Full Name</div>
+            <div class="info-value">{{ donor.get_name }}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Blood Group</div>
+            <div class="info-value">
+              <span class="blood-group-badge">{{ donor.bloodgroup }}</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Age</div>
+            <div class="info-value">{{ donor.age }} years</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Mobile Number</div>
+            <div class="info-value">{{ donor.mobile }}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Email</div>
+            <div class="info-value">{{ donor.user.email }}</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">Address</div>
+            <div class="info-value">{{ donor.address }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donation History -->
+      <div class="info-section">
+        <h2 class="section-title">
+          <i class="fas fa-hand-holding-medical"></i> Donation History
+        </h2>
+        {% if donations %}
+        <div class="history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for donation in donations %}
+              <tr>
+                <td>{{ donation.date|date:"M d, Y" }}</td>
+                <td>
+                  <span class="blood-group-badge"
+                    >{{ donation.bloodgroup }}</span
+                  >
+                </td>
+                <td>{{ donation.unit }} units</td>
+                <td>
+                  {% if donation.status == 'Approved' %}
+                  <span class="status-badge status-approved">Approved</span>
+                  {% elif donation.status == 'Pending' %}
+                  <span class="status-badge status-pending">Pending</span>
+                  {% elif donation.status == 'Rejected' %}
+                  <span class="status-badge status-rejected">Rejected</span>
+                  {% else %}
+                  <span class="status-badge status-pending"
+                    >{{ donation.status }}</span
+                  >
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-hand-holding-medical"></i>
+          <h3>No Donations Yet</h3>
+          <p>This donor hasn't made any blood donations yet.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Request History -->
+      <div class="info-section">
+        <h2 class="section-title">
+          <i class="fas fa-sync-alt"></i> Request History
+        </h2>
+        {% if requests %}
+        <div class="history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in requests %}
+              <tr>
+                <td>{{ request.date|date:"M d, Y" }}</td>
+                <td>
+                  <span class="blood-group-badge"
+                    >{{ request.bloodgroup }}</span
+                  >
+                </td>
+                <td>{{ request.unit }} units</td>
+                <td>
+                  {% if request.status == 'Approved' %}
+                  <span class="status-badge status-approved">Approved</span>
+                  {% elif request.status == 'Pending' %}
+                  <span class="status-badge status-pending">Pending</span>
+                  {% elif request.status == 'Rejected' %}
+                  <span class="status-badge status-rejected">Rejected</span>
+                  {% else %}
+                  <span class="status-badge status-pending"
+                    >{{ request.status }}</span
+                  >
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-sync-alt"></i>
+          <h3>No Requests</h3>
+          <p>This donor hasn't made any blood requests.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

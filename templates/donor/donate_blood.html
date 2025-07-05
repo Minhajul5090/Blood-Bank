@@ -1,0 +1,249 @@
+{% extends 'donor/donorbase.html' %} {% block content %} {%load static%}
+
+<style>
+  .donate-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+  }
+
+  .donate-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .donate-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .donate-header h2 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .donate-header p {
+    margin: 10px 0 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .donate-body {
+    padding: 40px;
+  }
+
+  .form-group {
+    margin-bottom: 25px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: white;
+  }
+
+  .select-wrapper {
+    position: relative;
+  }
+
+  .select-wrapper select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 50px;
+  }
+
+  .btn-donate {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-donate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(238, 90, 36, 0.3);
+  }
+
+  .info-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-left: 5px solid #667eea;
+  }
+
+  .info-section h4 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+  }
+
+  .info-section ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .info-section li {
+    margin-bottom: 8px;
+    color: #555;
+  }
+
+  @media (max-width: 768px) {
+    .donate-card {
+      margin: 20px;
+      border-radius: 15px;
+    }
+
+    .donate-header {
+      padding: 25px 20px;
+    }
+
+    .donate-header h2 {
+      font-size: 2rem;
+    }
+
+    .donate-body {
+      padding: 30px 20px;
+    }
+  }
+</style>
+
+<div class="donate-container">
+  <div class="donate-card">
+    <div class="donate-header">
+      <h2>🩸 Donate Blood</h2>
+      <p>Save Lives, Give Hope</p>
+    </div>
+
+    <div class="donate-body">
+      <div class="info-section">
+        <h4>📋 Before You Donate</h4>
+        <ul>
+          <li>You must be at least 18 years old</li>
+          <li>Weigh at least 50 kg (110 lbs)</li>
+          <li>Be in good health and feeling well</li>
+          <li>Not have donated blood in the last 56 days</li>
+        </ul>
+      </div>
+
+      <form method="POST" autocomplete="off" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="blood_group">Blood Group *</label>
+          <div class="select-wrapper">
+            {{ donation_form.blood_group }}
+            {% if donation_form.blood_group.errors %}
+              <div style="color: red; font-size: 0.9rem; margin-top: 5px;">
+                {{ donation_form.blood_group.errors.0 }}
+              </div>
+            {% endif %}
+            <!-- Selected value display -->
+            <div style="font-size: 0.9rem; color: #28a745; margin-top: 8px; font-weight: 600;">
+              Selected: <span id="selected-blood-group">-- Select Blood Group --</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="unit">Blood Unit (ml) *</label>
+          {{ donation_form.unit }}
+        </div>
+
+        <div class="form-group">
+          <label for="disease">Medical Conditions</label>
+          {{ donation_form.disease }}
+        </div>
+
+        <button class="btn-donate" type="submit">🩸 Donate Blood Now</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Enhance blood group dropdown
+  document.addEventListener('DOMContentLoaded', function() {
+    const bloodGroupSelect = document.querySelector('select[name="blood_group"]');
+    const selectedValueSpan = document.getElementById('selected-blood-group');
+    
+    if (bloodGroupSelect) {
+      // Update selected value display on load
+      if (bloodGroupSelect.value) {
+        selectedValueSpan.textContent = bloodGroupSelect.value;
+      }
+      
+      // Add focus styles
+      bloodGroupSelect.addEventListener('focus', function() {
+        this.style.borderColor = '#667eea';
+        this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+        this.style.background = 'white';
+      });
+      
+      // Remove focus styles
+      bloodGroupSelect.addEventListener('blur', function() {
+        this.style.borderColor = '#e1e5e9';
+        this.style.boxShadow = 'none';
+        this.style.background = '#f8f9fa';
+      });
+      
+      // Show selected value
+      bloodGroupSelect.addEventListener('change', function() {
+        console.log('Blood group changed to:', this.value);
+        
+        if (this.value) {
+          selectedValueSpan.textContent = this.value;
+          this.style.color = '#333';
+          selectedValueSpan.style.color = '#28a745';
+        } else {
+          selectedValueSpan.textContent = '-- Select Blood Group --';
+          this.style.color = '#6c757d';
+          selectedValueSpan.style.color = '#6c757d';
+        }
+      });
+    }
+  });
+</script>
+  </div>
+</div>
+
+{% endblock content %}

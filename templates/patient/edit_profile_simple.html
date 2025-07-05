@@ -1,0 +1,134 @@
+{% extends 'patient/patientbase.html' %} {% load static %} {% block content %}
+
+<div
+  style="padding: 20px; background: white; margin: 20px; border-radius: 10px"
+>
+  <h1>Edit Profile - Test Version</h1>
+
+  {% if messages %} {% for message in messages %}
+  <div
+    style="
+      padding: 10px;
+      margin: 10px 0;
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 5px;
+    "
+  >
+    {{ message }}
+  </div>
+  {% endfor %} {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div style="margin: 20px 0">
+      <h3>Personal Information</h3>
+
+      <div style="margin: 10px 0">
+        <label>First Name:</label>
+        {{ user_form.first_name }} {% if user_form.first_name.errors %}
+        <div style="color: red">{{ user_form.first_name.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Last Name:</label>
+        {{ user_form.last_name }} {% if user_form.last_name.errors %}
+        <div style="color: red">{{ user_form.last_name.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Username:</label>
+        {{ user_form.username }} {% if user_form.username.errors %}
+        <div style="color: red">{{ user_form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Email:</label>
+        {{ user_form.email }} {% if user_form.email.errors %}
+        <div style="color: red">{{ user_form.email.errors.0 }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="margin: 20px 0">
+      <h3>Patient Information</h3>
+
+      <div style="margin: 10px 0">
+        <label>Blood Group:</label>
+        {{ patient_form.bloodgroup }} {% if patient_form.bloodgroup.errors %}
+        <div style="color: red">{{ patient_form.bloodgroup.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Age:</label>
+        {{ patient_form.age }} {% if patient_form.age.errors %}
+        <div style="color: red">{{ patient_form.age.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Mobile:</label>
+        {{ patient_form.mobile }} {% if patient_form.mobile.errors %}
+        <div style="color: red">{{ patient_form.mobile.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Disease:</label>
+        {{ patient_form.disease }} {% if patient_form.disease.errors %}
+        <div style="color: red">{{ patient_form.disease.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Doctor Name:</label>
+        {{ patient_form.doctorname }} {% if patient_form.doctorname.errors %}
+        <div style="color: red">{{ patient_form.doctorname.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div style="margin: 10px 0">
+        <label>Address:</label>
+        {{ patient_form.address }} {% if patient_form.address.errors %}
+        <div style="color: red">{{ patient_form.address.errors.0 }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="margin: 20px 0">
+      <button
+        type="submit"
+        style="
+          padding: 10px 20px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+      >
+        Save Changes
+      </button>
+      <a
+        href="{% url 'patient-dashboard' %}"
+        style="
+          padding: 10px 20px;
+          background: #6c757d;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin-left: 10px;
+        "
+      >
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

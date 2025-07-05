@@ -1,0 +1,252 @@
+{% extends 'blood/adminbase.html' %} {% block content %} {% load static %}
+
+<style>
+  .admin-patient-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 30px 0;
+  }
+
+  .patient-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+  }
+
+  .patient-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .patient-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .patient-table-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    max-width: 1200px;
+    overflow: hidden;
+  }
+
+  .patient-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .patient-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .patient-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+  }
+
+  .patient-table tr:hover {
+    background: #f8f9fa;
+    transition: background 0.3s ease;
+  }
+
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #667eea;
+  }
+
+  .profile-link {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .profile-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .delete-btn {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .delete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .blood-group-badge {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+  }
+
+  .empty-state h3 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .admin-patient-container {
+      padding: 15px;
+    }
+
+    .patient-header h1 {
+      font-size: 2rem;
+    }
+
+    .patient-table-container {
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .patient-table {
+      min-width: 600px;
+    }
+  }
+</style>
+
+<div class="admin-patient-container">
+  <div class="patient-header">
+    <h1><i class="fas fa-user-injured"></i> Patient Management</h1>
+    <p>View and manage all registered patients</p>
+  </div>
+
+  <div class="patient-table-container">
+    {% if patients %}
+    <table class="patient-table">
+      <thead>
+        <tr>
+          <th>Profile Picture</th>
+          <th>Name</th>
+          <th>Blood Group</th>
+          <th>Age</th>
+          <th>Disease</th>
+          <th>Mobile</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in patients %}
+        <tr>
+          <td>
+            {% if patient.profile_pic %}
+            <img
+              src="{{ patient.profile_pic.url }}"
+              alt="Profile Pic"
+              class="profile-pic"
+            />
+            {% else %}
+            <div
+              style="
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 1.2rem;
+                border: 2px solid #667eea;
+              "
+            >
+              {{ patient.get_name|first|upper }}
+            </div>
+            {% endif %}
+          </td>
+          <td>
+            <strong>{{ patient.get_name }}</strong>
+          </td>
+          <td>
+            <span class="blood-group-badge">{{ patient.bloodgroup }}</span>
+          </td>
+          <td>{{ patient.age }}</td>
+          <td>{{ patient.disease|default:"None" }}</td>
+          <td>{{ patient.mobile }}</td>
+          <td>
+            <a
+              href="{% url 'admin-patient-profile' patient.id %}"
+              class="profile-link"
+            >
+              <i class="fas fa-eye"></i> View Profile
+            </a>
+            <a
+              href="{% url 'delete-patient' patient.id %}"
+              class="delete-btn"
+              onclick="return confirm('Are you sure you want to delete this patient? This action cannot be undone.')"
+            >
+              <i class="fas fa-trash"></i> Delete
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-user-injured"></i>
+      <h3>No Patients Found</h3>
+      <p>There are no registered patients in the system yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!--
+developed By : sumit kumar
+facebook : fb.com/sumit.luv
+youtube : youtube.com/lazycoders
+-->
+{% endblock content %}

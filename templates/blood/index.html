@@ -1,0 +1,1144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Blood Bank Management System - Save Lives Through Blood Donation
+    </title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 120px 0 80px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('{% static "image/homepage.jpg" %}') center/cover;
+        opacity: 0.3;
+        z-index: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .cta-buttons {
+        margin-top: 2rem;
+      }
+
+      .btn-custom {
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        margin: 0 10px 10px 0;
+      }
+
+      .btn-primary-custom {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        border: none;
+        color: white;
+      }
+
+      .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid white;
+        color: white;
+        background: transparent;
+      }
+
+      .btn-outline-custom:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+
+      .features-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+        height: 100%;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        color: #ff6b6b;
+        margin-bottom: 1rem;
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      .feature-text {
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .stats-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .about-section {
+        padding: 80px 0;
+        background: white;
+      }
+
+      .about-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .about-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        color: #333;
+      }
+
+      .about-text {
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+      }
+
+      .quote-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+        text-align: center;
+      }
+
+      .quote-text {
+        font-size: 1.5rem;
+        font-style: italic;
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .quote-author {
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .footer-custom {
+        background: #333;
+        color: white;
+        padding: 40px 0 20px;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .social-links {
+        margin-top: 20px;
+      }
+
+      .social-links a {
+        color: white;
+        font-size: 1.5rem;
+        margin: 0 10px;
+        transition: color 0.3s ease;
+      }
+
+      .social-links a:hover {
+        color: #ff6b6b;
+      }
+
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.1rem;
+        }
+
+        .btn-custom {
+          display: block;
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+
+      .pulse-animation {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Blood Availability Section Styles */
+      .blood-availability-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+
+      .section-subtitle {
+        font-size: 1.1rem;
+        color: #6c757d;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .blood-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .blood-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        border-color: #dc3545;
+      }
+
+      .blood-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .blood-type {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        margin-right: 10px;
+      }
+
+      .blood-icon {
+        font-size: 2rem;
+        color: #dc3545;
+      }
+
+      .blood-content {
+        text-align: center;
+      }
+
+      .blood-units {
+        margin-bottom: 15px;
+      }
+
+      .unit-number {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #dc3545;
+        margin-bottom: 5px;
+      }
+
+      .unit-label {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      .blood-status {
+        margin-top: 10px;
+      }
+
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .status-high {
+        background: #28a745;
+        color: white;
+      }
+
+      .status-medium {
+        background: #ffc107;
+        color: #212529;
+      }
+
+      .status-low {
+        background: #dc3545;
+        color: white;
+      }
+
+      .blood-info {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .blood-card {
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    {% include "blood/navbar.html" %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8 mx-auto text-center hero-content">
+            <h1 class="hero-title">Save Lives Through Blood Donation</h1>
+            <p class="hero-subtitle">
+              Join our community of donors and help save countless lives. Every
+              drop counts, every donor matters.
+            </p>
+
+            <div class="cta-buttons">
+              <a
+                href="/donor/donorlogin"
+                class="btn btn-custom btn-primary-custom pulse-animation"
+              >
+                <i class="fas fa-heart"></i> Become a Donor
+              </a>
+              <a
+                href="/patient/patientlogin"
+                class="btn btn-custom btn-outline-custom"
+              >
+                <i class="fas fa-user-injured"></i> Need Blood?
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blood Availability Section -->
+    <section class="blood-availability-section">
+      <div class="container">
+        <div class="section-header text-center mb-5">
+          <h2 class="section-title">Current Blood Stock Availability</h2>
+          <p class="section-subtitle">
+            Check the availability of different blood types in our blood bank
+          </p>
+        </div>
+
+        <div class="row">
+          <!-- A+ Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">A+</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ A1.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if A1.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif A1.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- A- Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">A-</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ A2.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if A2.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif A2.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- B+ Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">B+</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ B1.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if B1.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif B1.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- B- Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">B-</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ B2.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if B2.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif B2.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AB+ Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">AB+</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ AB1.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if AB1.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif AB1.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AB- Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">AB-</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ AB2.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if AB2.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif AB2.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- O+ Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">O+</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ O1.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if O1.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif O1.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- O- Blood Group -->
+          <div class="col-lg-3 col-md-6 mb-4">
+            <div class="blood-card">
+              <div class="blood-header">
+                <h3 class="blood-type">O-</h3>
+                <i class="fas fa-tint blood-icon"></i>
+              </div>
+              <div class="blood-content">
+                <div class="blood-units">
+                  <span class="unit-number">{{ O2.unit }}</span>
+                  <span class="unit-label">Units Available</span>
+                </div>
+                <div class="blood-status">
+                  {% if O2.unit > 10 %}
+                  <span class="status-badge status-high">High Stock</span>
+                  {% elif O2.unit > 5 %}
+                  <span class="status-badge status-medium">Medium Stock</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <p class="blood-info">
+            <i class="fas fa-info-circle mr-2"></i>
+            Stock levels are updated in real-time. Contact us for urgent blood
+            requirements.
+          </p>
+          <a
+            href="/patient/patientlogin"
+            class="btn btn-custom btn-primary-custom mt-3"
+          >
+            <i class="fas fa-phone mr-2"></i>Request Blood Now
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">{{ total_lives_saved }}</div>
+              <div class="stat-label">Lives Saved</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">{{ total_donors }}</div>
+              <div class="stat-label">Donors</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">{{ total_blood_units }}</div>
+              <div class="stat-label">Blood Units</div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stat-item">
+              <div class="stat-number">{{ total_requests }}</div>
+              <div class="stat-label">Requests</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-heartbeat"></i>
+              </div>
+              <h3 class="feature-title">Easy Donation</h3>
+              <p class="feature-text">
+                Simple and secure blood donation process with real-time tracking
+                of your donation status.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3 class="feature-title">Safe & Secure</h3>
+              <p class="feature-text">
+                Your data is protected with industry-standard security measures
+                and privacy controls.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <h3 class="feature-title">24/7 Access</h3>
+              <p class="feature-text">
+                Request blood anytime, anywhere. Our system is available round
+                the clock for emergencies.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3 class="feature-title">Real-time Tracking</h3>
+              <p class="feature-text">
+                Monitor blood stock levels and track your donation history in
+                real-time.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <h3 class="feature-title">Community Support</h3>
+              <p class="feature-text">
+                Join a community of donors and patients working together to save
+                lives.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <h3 class="feature-title">Mobile Friendly</h3>
+              <p class="feature-text">
+                Access our system from any device - desktop, tablet, or mobile
+                phone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-content">
+          <h2 class="about-title">Why Blood Donation Matters?</h2>
+          <p class="about-text">
+            Blood donation is a simple act that can save countless lives. Every
+            two seconds, someone in the world needs blood. Whether it's for
+            surgery, cancer treatment, chronic illnesses, or traumatic injuries,
+            blood is essential for medical care. By donating blood, you're
+            giving someone another chance at life.
+          </p>
+          <p class="about-text">
+            Our Blood Bank Management System connects donors with patients in
+            need, ensuring that blood is available when and where it's needed
+            most. Join our mission to save lives through safe and efficient
+            blood donation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <p class="quote-text">
+              "The blood you donate gives someone another chance at life. One
+              day that someone may be a close relative, a friend, a loved one—or
+              even you."
+            </p>
+            <p class="quote-author">- Unknown</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="footer mt-auto"
+      style="
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 40px 0 20px;
+        margin-top: 50px;
+      "
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <h5
+              style="
+                color: #ff6b6b;
+                font-weight: 600;
+                margin-bottom: 20px;
+                font-size: 1.2rem;
+              "
+            >
+              <i class="fas fa-heartbeat"></i> Blood Bank Management
+            </h5>
+            <p
+              style="
+                color: rgba(255, 255, 255, 0.8);
+                line-height: 1.8;
+                margin-bottom: 8px;
+              "
+            >
+              Connecting donors with patients in need. Our mission is to ensure
+              that blood is available when and where it's needed most.
+            </p>
+            <div class="social-links" style="margin-top: 20px">
+              <a
+                href="#"
+                style="
+                  display: inline-block;
+                  width: 40px;
+                  height: 40px;
+                  background: rgba(255, 255, 255, 0.1);
+                  color: white;
+                  text-align: center;
+                  line-height: 40px;
+                  border-radius: 50%;
+                  margin: 0 5px;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="#"
+                style="
+                  display: inline-block;
+                  width: 40px;
+                  height: 40px;
+                  background: rgba(255, 255, 255, 0.1);
+                  color: white;
+                  text-align: center;
+                  line-height: 40px;
+                  border-radius: 50%;
+                  margin: 0 5px;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a
+                href="#"
+                style="
+                  display: inline-block;
+                  width: 40px;
+                  height: 40px;
+                  background: rgba(255, 255, 255, 0.1);
+                  color: white;
+                  text-align: center;
+                  line-height: 40px;
+                  border-radius: 50%;
+                  margin: 0 5px;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a
+                href="#"
+                style="
+                  display: inline-block;
+                  width: 40px;
+                  height: 40px;
+                  background: rgba(255, 255, 255, 0.1);
+                  color: white;
+                  text-align: center;
+                  line-height: 40px;
+                  border-radius: 50%;
+                  margin: 0 5px;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <h5
+              style="
+                color: #ff6b6b;
+                font-weight: 600;
+                margin-bottom: 20px;
+                font-size: 1.2rem;
+              "
+            >
+              Quick Links
+            </h5>
+            <div class="quick-links">
+              <a
+                href="/"
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                  display: block;
+                  padding: 5px 0;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fas fa-home"></i> Home
+              </a>
+              <a
+                href="/donor/donorlogin"
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                  display: block;
+                  padding: 5px 0;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fas fa-user"></i> Become a Donor
+              </a>
+              <a
+                href="/patient/patientlogin"
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                  display: block;
+                  padding: 5px 0;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fas fa-procedures"></i> Need Blood?
+              </a>
+              <a
+                href="/adminlogin"
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                  display: block;
+                  padding: 5px 0;
+                  transition: all 0.3s ease;
+                "
+              >
+                <i class="fas fa-user-shield"></i> Admin Login
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <h5
+              style="
+                color: #ff6b6b;
+                font-weight: 600;
+                margin-bottom: 20px;
+                font-size: 1.2rem;
+              "
+            >
+              Contact Info
+            </h5>
+            <div class="contact-info">
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                <i
+                  class="fas fa-map-marker-alt"
+                  style="color: #ff6b6b; margin-right: 10px; width: 20px"
+                ></i>
+                123 Medical Center, City
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                <i
+                  class="fas fa-phone"
+                  style="color: #ff6b6b; margin-right: 10px; width: 20px"
+                ></i>
+                +91 98765 43210
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                <i
+                  class="fas fa-envelope"
+                  style="color: #ff6b6b; margin-right: 10px; width: 20px"
+                ></i>
+                info@bloodbank.com
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                <i
+                  class="fas fa-clock"
+                  style="color: #ff6b6b; margin-right: 10px; width: 20px"
+                ></i>
+                24/7 Emergency Support
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <h5
+              style="
+                color: #ff6b6b;
+                font-weight: 600;
+                margin-bottom: 20px;
+                font-size: 1.2rem;
+              "
+            >
+              Emergency
+            </h5>
+            <p
+              style="
+                color: rgba(255, 255, 255, 0.8);
+                line-height: 1.8;
+                margin-bottom: 8px;
+              "
+            >
+              For emergency blood requirements, contact us immediately.
+            </p>
+            <div class="emergency-contact">
+              <p style="color: #ff6b6b; font-weight: bold; margin-bottom: 8px">
+                <i class="fas fa-ambulance"></i> Emergency: +91 98765 43210
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                <i class="fas fa-info-circle"></i> Available 24/7
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="footer-bottom"
+          style="
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+            text-align: center;
+          "
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.8);
+                  line-height: 1.8;
+                  margin-bottom: 8px;
+                "
+              >
+                &copy; 2025 Blood Bank Management System. All rights reserved.
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.6);
+                  line-height: 1.6;
+                  margin-bottom: 8px;
+                  font-size: 0.9rem;
+                "
+              >
+                Designed and Developed by
+                <strong style="color: #ff6b6b">Minhajul Abedin</strong>
+              </p>
+              <p
+                style="
+                  color: rgba(255, 255, 255, 0.5);
+                  line-height: 1.4;
+                  font-size: 0.8rem;
+                "
+              >
+                Saving Lives Through Technology & Innovation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
+<!--
+developed By : sumit kumar
+facebook : fb.com/sumit.luv
+youtube : youtube.com/lazycoders
+-->

@@ -1,0 +1,433 @@
+{% extends 'blood/adminbase.html' %} {% block content %} {% load static %}
+
+<style>
+  .approval-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .request-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+
+  .request-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+  }
+
+  .request-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .request-header p {
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+  }
+
+  .request-body {
+    padding: 30px;
+  }
+
+  .request-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .detail-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+  }
+
+  .detail-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+  }
+
+  .detail-value {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+
+  .donor-section {
+    background: #e8f5e8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid #28a745;
+  }
+
+  .donor-section h3 {
+    color: #155724;
+    margin-bottom: 15px;
+  }
+
+  .donor-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .donor-item {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+  }
+
+  .status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+
+  .status-accepted {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .status-closed {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+
+  .approval-actions {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  .approval-actions h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e8ed;
+    border-radius: 6px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .btn-approve {
+    background: #28a745;
+    color: white;
+  }
+
+  .btn-approve:hover {
+    background: #218838;
+    transform: translateY(-1px);
+  }
+
+  .btn-reject {
+    background: #dc3545;
+    color: white;
+  }
+
+  .btn-reject:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+  }
+
+  .stock-info {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid #ffc107;
+  }
+
+  .stock-info h4 {
+    color: #856404;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .request-details {
+      grid-template-columns: 1fr;
+    }
+
+    .donor-info {
+      grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<div class="approval-container">
+  <div class="request-card">
+    <div class="request-header">
+      <h2>🩸 Blood Request Approval</h2>
+      <p>Review and approve the blood request</p>
+    </div>
+
+    <div class="request-body">
+      <!-- Request Details -->
+      <div class="request-details">
+        <div class="detail-item">
+          <span class="detail-label">Patient Name</span>
+          <span class="detail-value">{{ blood_request.patient_name }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Patient Age</span>
+          <span class="detail-value"
+            >{{ blood_request.patient_age }} years</span
+          >
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Blood Group</span>
+          <span class="detail-value">{{ blood_request.bloodgroup }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Units Needed</span>
+          <span class="detail-value">{{ blood_request.unit }} ml</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Request Date</span>
+          <span class="detail-value">{{ blood_request.date }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Current Status</span>
+          <span class="detail-value">
+            <span class="status-badge status-{{ blood_request.status|lower }}">
+              {{ blood_request.status }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Reason -->
+      <div class="detail-item" style="grid-column: 1 / -1">
+        <span class="detail-label">Reason for Request</span>
+        <span class="detail-value">{{ blood_request.reason }}</span>
+      </div>
+
+      <!-- Stock Information -->
+      <div class="stock-info">
+        <h4>📊 Current Stock Information</h4>
+        <p>
+          <strong>Available {{ blood_request.bloodgroup }}:</strong> {{
+          blood_request.get_available_stock }} units
+        </p>
+        <p><strong>Requested:</strong> {{ blood_request.unit }} units</p>
+        <p>
+          <strong>Stock Sufficient:</strong> {% if
+          blood_request.is_stock_available %}✅ Yes{% else %}❌ No{% endif %}
+        </p>
+      </div>
+
+      <!-- Donor Response Section -->
+      {% if accepted_donor %}
+      <div class="donor-section">
+        <h3>✅ Accepted by Donor</h3>
+        <div class="donor-info">
+          <div class="donor-item">
+            <span class="detail-label">Donor Name</span>
+            <span class="detail-value">{{ accepted_donor.get_name }}</span>
+          </div>
+
+          <div class="donor-item">
+            <span class="detail-label">Blood Group</span>
+            <span class="detail-value">{{ accepted_donor.bloodgroup }}</span>
+          </div>
+
+          <div class="donor-item">
+            <span class="detail-label">Contact</span>
+            <span class="detail-value">{{ accepted_donor.mobile }}</span>
+          </div>
+
+          <div class="donor-item">
+            <span class="detail-label">Address</span>
+            <span class="detail-value">{{ accepted_donor.address }}</span>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- All Donor Responses -->
+      <div class="donor-section">
+        <h3>👥 All Donor Responses</h3>
+        <div class="donor-info">
+          {% for donor_request in donor_requests %}
+          <div class="donor-item">
+            <span class="detail-label">Donor</span>
+            <span class="detail-value">{{ donor_request.donor.get_name }}</span>
+            <br />
+            <span class="status-badge status-{{ donor_request.status|lower }}">
+              {{ donor_request.status }}
+            </span>
+            {% if donor_request.notes %}
+            <br /><small
+              ><strong>Notes:</strong> {{ donor_request.notes }}</small
+            >
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="donor-item">
+            <span class="detail-value">No donor responses yet</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Approval Actions -->
+      {% if blood_request.status == 'Accepted' %}
+      <div class="approval-actions">
+        <h3>🎯 Admin Decision</h3>
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label class="form-label">Admin Notes (Optional)</label>
+            <textarea
+              name="admin_notes"
+              class="form-textarea"
+              placeholder="Add any notes about this approval..."
+            >
+{{ blood_request.admin_notes }}</textarea
+            >
+          </div>
+
+          <div class="action-buttons">
+            <button
+              type="submit"
+              name="action"
+              value="approve"
+              class="btn btn-approve"
+            >
+              ✅ Approve Request
+            </button>
+            <button
+              type="submit"
+              name="action"
+              value="reject"
+              class="btn btn-reject"
+            >
+              ❌ Reject Request
+            </button>
+            <a href="{% url 'admin-request' %}" class="btn btn-secondary">
+              🔙 Back to Requests
+            </a>
+          </div>
+        </form>
+      </div>
+      {% elif blood_request.status == 'Pending' %}
+      <div class="approval-actions">
+        <h3>📤 Forward to Donors</h3>
+        <p>
+          This request is pending. You can forward it to donors with matching
+          blood group.
+        </p>
+        <div class="action-buttons">
+          <a href="{% url 'auto-forward-requests' %}" class="btn btn-approve">
+            📤 Forward to Donors
+          </a>
+          <a href="{% url 'admin-request' %}" class="btn btn-secondary">
+            🔙 Back to Requests
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <div class="approval-actions">
+        <h3>📋 Request Status</h3>
+        <p>
+          This request is currently in
+          <strong>{{ blood_request.status }}</strong> status.
+        </p>
+        <div class="action-buttons">
+          <a href="{% url 'admin-request' %}" class="btn btn-secondary">
+            🔙 Back to Requests
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
