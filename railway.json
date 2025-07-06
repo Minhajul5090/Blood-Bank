@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "export DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings_railway && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:$PORT --timeout 120",
+    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:$PORT --timeout 120",
     "numReplicas": 1,
     "healthcheckPath": "/health/",
     "healthcheckTimeout": 600,

@@ -10,6 +10,9 @@ DEBUG = False
 # Railway provides the PORT environment variable
 ALLOWED_HOSTS = ['*']
 
+# Get SECRET_KEY from environment or use default
+SECRET_KEY = os.environ.get('SECRET_KEY', 'w@k#6^!z8$1b2r4e7u0p9s3c5t!g&h@j*lqzv')
+
 # Database configuration for Railway
 DATABASES = {
     'default': {
