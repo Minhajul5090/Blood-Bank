@@ -4,10 +4,10 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python manage.py collectstatic --noinput && python manage.py migrate && DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings_railway gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:$PORT",
+    "startCommand": "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:$PORT --timeout 120",
     "numReplicas": 1,
-    "healthcheckPath": "/health/",
-    "healthcheckTimeout": 300,
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 600,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }

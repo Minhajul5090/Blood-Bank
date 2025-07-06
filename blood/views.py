@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.conf import settings
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from donor import models as dmodels
@@ -17,7 +17,19 @@ from .auth_views import admin_required, donor_required, patient_required
 
 def health_check(request):
     """Simple health check endpoint for Railway"""
-    return JsonResponse({'status': 'healthy', 'message': 'Blood Bank Management System is running'})
+    return JsonResponse({
+        'status': 'healthy', 
+        'message': 'Blood Bank Management System is running',
+        'timestamp': str(datetime.now())
+    })
+
+def root_health_check(request):
+    """Root endpoint for Railway health checks"""
+    return JsonResponse({
+        'status': 'healthy',
+        'message': 'Blood Bank Management System - Root Endpoint',
+        'timestamp': str(datetime.now())
+    })
 
 def home_view(request):
     x=models.Stock.objects.all()
