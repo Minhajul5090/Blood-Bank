@@ -4,7 +4,6 @@ Railway startup script for Blood Bank Management System
 """
 import os
 import sys
-import subprocess
 
 def main():
     print("🚀 Starting Blood Bank Management System on Railway...")
@@ -20,32 +19,28 @@ def main():
     print(f"   - PORT: {port}")
     print(f"   - SECRET_KEY: {'Set' if os.environ.get('SECRET_KEY') else 'Not set'}")
     
+    # Import Django and run management commands
     try:
+        import django
+        from django.core.management import execute_from_command_line
+        
+        # Set up Django
+        django.setup()
+        
         # Run migrations
         print("🗄️ Running database migrations...")
-        subprocess.run([sys.executable, 'manage.py', 'migrate'], check=True)
+        execute_from_command_line(['manage.py', 'migrate'])
         
         # Collect static files
         print("📁 Collecting static files...")
-        subprocess.run([sys.executable, 'manage.py', 'collectstatic', '--noinput'], check=True)
+        execute_from_command_line(['manage.py', 'collectstatic', '--noinput'])
         
         # Start Gunicorn
         print(f"🌐 Starting Gunicorn on port {port}...")
-        subprocess.run([
-            sys.executable, '-m', 'gunicorn',
-            'bloodbankmanagement.wsgi:application',
-            '--bind', f'0.0.0.0:{port}',
-            '--timeout', '120',
-            '--workers', '1',
-            '--access-logfile', '-',
-            '--error-logfile', '-'
-        ], check=True)
+        os.system(f"gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:{port} --timeout 120 --workers 1")
         
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Error during startup: {e}")
-        sys.exit(1)
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f"❌ Error during startup: {e}")
         sys.exit(1)
 
 if __name__ == '__main__':

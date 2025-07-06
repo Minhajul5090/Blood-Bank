@@ -2,45 +2,129 @@
 Railway-specific settings for Blood Bank Management System
 """
 import os
-from .settings import *
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY', 'w@k#6^!z8$1b2r4e7u0p9s3c5t!g&h@j*lqzv')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# Railway provides the PORT environment variable
 ALLOWED_HOSTS = ['*']
 
-# Get SECRET_KEY from environment or use default
-SECRET_KEY = os.environ.get('SECRET_KEY', 'w@k#6^!z8$1b2r4e7u0p9s3c5t!g&h@j*lqzv')
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'widget_tweaks',
+    'blood',
+    'donor',
+    'patient',
+]
 
-# Database configuration for Railway
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'bloodbankmanagement.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'bloodbankmanagement.wsgi.application'
+
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': BASE_DIR / 'db.sqlite3',
         'OPTIONS': {
-            'timeout': 20,  # Add timeout for SQLite
+            'timeout': 20,
         }
     }
 }
 
-# Static files configuration
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# Internationalization
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
-# Media files configuration
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Media files
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'static'
 
-# Security settings for production
+# Login redirect
+LOGIN_REDIRECT_URL = '/afterlogin'
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'from@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'xyz')
+EMAIL_RECEIVING_USER = ['to@gmail.com']
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ADMIN_EMAIL = 'admin@bloodbank.com'
+
+# Security settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_SECURE = False
 
-# Email configuration (you can set these as environment variables)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Logging configuration
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -59,7 +143,4 @@ LOGGING = {
             'level': 'INFO',
         },
     },
-}
-
-# Disable whitenoise for Railway (can cause issues)
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' 
+} 

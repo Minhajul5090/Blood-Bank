@@ -25,6 +25,7 @@ In your Railway project dashboard, add these environment variables:
 ```
 DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings_railway
 SECRET_KEY=your-secret-key-here
+PORT=8000
 ```
 
 To generate a secure SECRET_KEY, run:
@@ -163,3 +164,118 @@ Once deployed successfully, you should see:
 - ✅ Application accessible at your Railway URL
 - ✅ Admin panel working
 - ✅ All features functional
+
+## Quick Fix for Health Check Issues
+
+The health check is failing because the application isn't starting properly. Here's how to fix it:
+
+### 1. Environment Variables Setup
+
+In your Railway dashboard, set these environment variables:
+
+```
+DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings_railway
+SECRET_KEY=your-secret-key-here
+PORT=8000
+```
+
+### 2. Test Locally First
+
+Before deploying, test the Railway settings locally:
+
+```bash
+# Activate virtual environment
+source env/Scripts/activate  # Windows
+# or
+source env/bin/activate      # Linux/Mac
+
+# Test with Railway settings
+python manage.py runserver --settings=bloodbankmanagement.settings_railway
+
+# Test health check
+python test_health.py
+```
+
+### 3. Deploy to Railway
+
+1. Push your code to GitHub
+2. Connect your repository to Railway
+3. Railway will automatically detect the `railway.json` configuration
+4. Set the environment variables in Railway dashboard
+5. Deploy
+
+### 4. Monitor Deployment
+
+Check Railway logs for any errors:
+
+```bash
+# View logs
+railway logs
+
+# Check service status
+railway status
+```
+
+### 5. Troubleshooting
+
+If health check still fails:
+
+1. **Check Railway logs** - Look for Django startup errors
+2. **Verify environment variables** - Make sure `DJANGO_SETTINGS_MODULE` is set
+3. **Test database connection** - Ensure SQLite file is writable
+4. **Check static files** - Verify `collectstatic` runs successfully
+
+### 6. Manual Health Check Test
+
+You can test the health check manually:
+
+```bash
+# Get your Railway URL
+railway status
+
+# Test health check
+curl https://your-app.railway.app/health/
+```
+
+Expected response:
+
+```json
+{
+  "status": "healthy",
+  "message": "Blood Bank Management System is running",
+  "service": "django",
+  "version": "1.0.0"
+}
+```
+
+### 7. Common Issues
+
+- **ModuleNotFoundError**: Make sure all dependencies are in `requirements.txt`
+- **Database errors**: Check if SQLite file is writable
+- **Static files**: Ensure `collectstatic` completes successfully
+- **Port binding**: Verify Gunicorn binds to `0.0.0.0:$PORT`
+
+### 8. Emergency Fix
+
+If nothing works, try this minimal configuration:
+
+1. Update `railway.json`:
+
+```json
+{
+  "deploy": {
+    "startCommand": "python manage.py runserver 0.0.0.0:$PORT",
+    "healthcheckPath": "/health/"
+  }
+}
+```
+
+2. Use development settings temporarily:
+
+```bash
+# Set in Railway dashboard
+DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings
+DEBUG=True
+```
+
+This will help identify if the issue is with production settings or the application itself.

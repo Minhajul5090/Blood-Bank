@@ -16,9 +16,8 @@ from django.contrib import messages
 from .auth_views import admin_required, donor_required, patient_required
 
 def health_check(request):
-    """Minimal health check endpoint for Railway - no imports"""
+    """Minimal health check endpoint for Railway - no Django imports"""
     import json
-    from django.http import HttpResponse
     
     response_data = {
         'status': 'healthy',
@@ -27,11 +26,14 @@ def health_check(request):
         'version': '1.0.0'
     }
     
-    return HttpResponse(
+    # Create response manually
+    from django.http import HttpResponse
+    response = HttpResponse(
         json.dumps(response_data),
         content_type='application/json',
         status=200
     )
+    return response
 
 def root_health_check(request):
     """Root endpoint for Railway health checks"""
