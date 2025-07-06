@@ -1,150 +1,141 @@
 #!/bin/bash
 
 # Blood Bank Management System - Deployment Script
-# This script helps automate the deployment process
+# This script helps you deploy your Django app to various platforms
 
-echo "🚀 Blood Bank Management System - Deployment Script"
+echo "🚀 Blood Bank Management System - Deployment Helper"
 echo "=================================================="
 
-# Check if we're in the right directory
-if [ ! -f "manage.py" ]; then
-    echo "❌ Error: Please run this script from the project root directory"
+# Check if git is initialized
+if [ ! -d ".git" ]; then
+    echo "❌ Git repository not found. Please initialize git first:"
+    echo "   git init"
+    echo "   git add ."
+    echo "   git commit -m 'Initial commit'"
     exit 1
 fi
 
-# Function to generate secret key
-generate_secret_key() {
-    python3 -c "import secrets; print(secrets.token_urlsafe(50))"
-}
+# Check if all required files exist
+echo "📋 Checking deployment files..."
 
-# Function to check if command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
+required_files=("railway.json" "requirements_production.txt" "build.sh" "nixpacks.toml")
+missing_files=()
 
-echo "📋 Pre-deployment checklist:"
-echo "1. Checking Python version..."
-python3 --version
+for file in "${required_files[@]}"; do
+    if [ ! -f "$file" ]; then
+        missing_files+=("$file")
+    fi
+done
 
-echo "2. Checking if virtual environment is activated..."
-if [[ "$VIRTUAL_ENV" != "" ]]; then
-    echo "✅ Virtual environment is active: $VIRTUAL_ENV"
-else
-    echo "⚠️  Virtual environment not detected. Consider activating one."
+if [ ${#missing_files[@]} -gt 0 ]; then
+    echo "❌ Missing required deployment files:"
+    for file in "${missing_files[@]}"; do
+        echo "   - $file"
+    done
+    echo "Please ensure all deployment files are present."
+    exit 1
 fi
 
-echo "3. Installing/updating dependencies..."
-pip install -r requirements_production.txt
+echo "✅ All deployment files found!"
 
-echo "4. Running Django system checks..."
-python manage.py check --deploy
-
-echo "5. Collecting static files..."
-python manage.py collectstatic --noinput
-
-echo "6. Running database migrations..."
-python manage.py migrate
-
-echo "7. Checking for environment variables..."
+# Generate secret key if not exists
 if [ -z "$SECRET_KEY" ]; then
-    echo "⚠️  SECRET_KEY not set. Generating one..."
-    export SECRET_KEY=$(generate_secret_key)
-    echo "Generated SECRET_KEY: $SECRET_KEY"
+    echo "🔑 Generating new SECRET_KEY..."
+    export SECRET_KEY=$(python -c "import secrets; print(secrets.token_urlsafe(50))")
+    echo "SECRET_KEY generated: $SECRET_KEY"
 fi
 
-if [ -z "$DATABASE_URL" ]; then
-    echo "⚠️  DATABASE_URL not set. Using SQLite for development."
-fi
+# Check current branch
+current_branch=$(git branch --show-current)
+echo "🌿 Current branch: $current_branch"
 
-if [ -z "$EMAIL_HOST_USER" ]; then
-    echo "⚠️  EMAIL_HOST_USER not set. Email functionality may not work."
-fi
-
-if [ -z "$EMAIL_HOST_PASSWORD" ]; then
-    echo "⚠️  EMAIL_HOST_PASSWORD not set. Email functionality may not work."
-fi
-
+# Show deployment options
 echo ""
 echo "🎯 Choose your deployment platform:"
-echo "1. Heroku"
-echo "2. Railway"
+echo "1. Railway (Recommended - Free & Easy)"
+echo "2. Heroku"
 echo "3. DigitalOcean App Platform"
 echo "4. Traditional VPS"
-echo "5. Local Production Test"
+echo "5. Test locally with production settings"
 echo "6. Exit"
 
 read -p "Enter your choice (1-6): " choice
 
 case $choice in
     1)
-        echo "🚀 Deploying to Heroku..."
-        if ! command_exists heroku; then
-            echo "❌ Heroku CLI not found. Please install it first:"
-            echo "   https://devcenter.heroku.com/articles/heroku-cli"
-            exit 1
-        fi
-        
-        echo "📝 Heroku deployment steps:"
-        echo "1. Login to Heroku: heroku login"
-        echo "2. Create app: heroku create your-app-name"
-        echo "3. Add database: heroku addons:create heroku-postgresql:hobby-dev"
-        echo "4. Set environment variables:"
-        echo "   heroku config:set SECRET_KEY=\"$SECRET_KEY\""
-        echo "   heroku config:set EMAIL_HOST_USER=\"your-email@gmail.com\""
-        echo "   heroku config:set EMAIL_HOST_PASSWORD=\"your-app-password\""
-        echo "5. Deploy: git push heroku main"
-        echo "6. Run migrations: heroku run python manage.py migrate"
-        echo "7. Create superuser: heroku run python manage.py createsuperuser"
+        echo "🚂 Deploying to Railway..."
+        echo ""
+        echo "Steps to deploy to Railway:"
+        echo "1. Go to https://railway.app"
+        echo "2. Sign up/Login with GitHub"
+        echo "3. Click 'New Project' → 'Deploy from GitHub repo'"
+        echo "4. Select your blood bank repository"
+        echo "5. Add these environment variables in Railway dashboard:"
+        echo "   DEBUG=False"
+        echo "   SECRET_KEY=$SECRET_KEY"
+        echo "   ALLOWED_HOSTS=your-app-name.railway.app"
+        echo "6. Railway will automatically deploy your app"
+        echo ""
+        echo "After deployment, run these commands in Railway:"
+        echo "   python manage.py migrate"
+        echo "   python manage.py createsuperuser"
         ;;
     2)
-        echo "🚂 Deploying to Railway..."
-        echo "📝 Railway deployment steps:"
-        echo "1. Go to https://railway.app"
-        echo "2. Connect your GitHub repository"
-        echo "3. Add environment variables in Railway dashboard:"
-        echo "   - SECRET_KEY: $SECRET_KEY"
-        echo "   - DATABASE_URL: (will be auto-provided)"
-        echo "   - EMAIL_HOST_USER: your-email@gmail.com"
-        echo "   - EMAIL_HOST_PASSWORD: your-app-password"
-        echo "4. Deploy automatically"
+        echo "🌊 Deploying to Heroku..."
+        echo ""
+        echo "Prerequisites:"
+        echo "1. Install Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli"
+        echo "2. Login to Heroku: heroku login"
+        echo ""
+        echo "Deployment commands:"
+        echo "heroku create your-bloodbank-app"
+        echo "heroku addons:create heroku-postgresql:mini"
+        echo "heroku config:set SECRET_KEY='$SECRET_KEY'"
+        echo "heroku config:set DEBUG=False"
+        echo "git push heroku $current_branch:main"
+        echo "heroku run python manage.py migrate"
+        echo "heroku run python manage.py createsuperuser"
         ;;
     3)
         echo "🌊 Deploying to DigitalOcean App Platform..."
-        echo "📝 DigitalOcean deployment steps:"
+        echo ""
+        echo "Steps:"
         echo "1. Go to https://cloud.digitalocean.com/apps"
-        echo "2. Connect your GitHub repository"
-        echo "3. Configure environment variables:"
-        echo "   - SECRET_KEY: $SECRET_KEY"
-        echo "   - DATABASE_URL: (will be auto-provided)"
-        echo "   - EMAIL_HOST_USER: your-email@gmail.com"
-        echo "   - EMAIL_HOST_PASSWORD: your-app-password"
-        echo "4. Deploy"
+        echo "2. Create new app from GitHub repository"
+        echo "3. Select your blood bank repository"
+        echo "4. Configure build settings:"
+        echo "   - Build Command: ./build.sh"
+        echo "   - Run Command: gunicorn bloodbankmanagement.wsgi:application --bind 0.0.0.0:\$PORT"
+        echo "5. Add environment variables:"
+        echo "   DEBUG=False"
+        echo "   SECRET_KEY=$SECRET_KEY"
+        echo "   ALLOWED_HOSTS=your-app-name.ondigitalocean.app"
         ;;
     4)
-        echo "🖥️  Traditional VPS Deployment..."
-        echo "📝 VPS deployment steps:"
-        echo "1. Set up server with Ubuntu/Debian"
-        echo "2. Install dependencies:"
-        echo "   sudo apt update && sudo apt upgrade -y"
-        echo "   sudo apt install python3 python3-pip python3-venv nginx postgresql -y"
-        echo "3. Clone repository and set up virtual environment"
-        echo "4. Configure PostgreSQL database"
-        echo "5. Set up Gunicorn and Nginx"
-        echo "6. Configure firewall and SSL"
+        echo "🖥️ Traditional VPS Deployment..."
         echo ""
-        echo "📖 See DEPLOYMENT_GUIDE.md for detailed VPS instructions"
+        echo "This requires manual server setup. See DEPLOYMENT_GUIDE.md for detailed instructions."
+        echo ""
+        echo "Quick commands for VPS:"
+        echo "sudo apt update && sudo apt upgrade -y"
+        echo "sudo apt install python3 python3-pip nginx postgresql postgresql-contrib -y"
+        echo "git clone https://github.com/your-username/bloodbankmanagement.git"
+        echo "cd bloodbankmanagement"
+        echo "python3 -m venv venv"
+        echo "source venv/bin/activate"
+        echo "pip install -r requirements_production.txt"
         ;;
     5)
-        echo "🧪 Local Production Test..."
-        echo "Testing with production settings..."
-        
-        # Set production environment variables
+        echo "🧪 Testing locally with production settings..."
+        echo ""
+        echo "Setting environment variables for local testing..."
         export DEBUG=False
-        export DJANGO_SETTINGS_MODULE=bloodbankmanagement.settings_production
+        export SECRET_KEY="$SECRET_KEY"
+        export ALLOWED_HOSTS="localhost,127.0.0.1"
         
-        echo "Running production server..."
-        echo "Press Ctrl+C to stop"
-        gunicorn bloodbankmanagement.wsgi --bind 0.0.0.0:8000
+        echo "Running with production settings..."
+        python manage.py collectstatic --noinput
+        python manage.py runserver 8000
         ;;
     6)
         echo "👋 Goodbye!"
@@ -157,6 +148,7 @@ case $choice in
 esac
 
 echo ""
-echo "✅ Deployment script completed!"
-echo "📖 For detailed instructions, see DEPLOYMENT_GUIDE.md"
-echo "🔧 For troubleshooting, check the logs and environment variables" 
+echo "📚 For detailed instructions, see DEPLOYMENT_GUIDE.md"
+echo "🔧 For troubleshooting, check the logs and environment variables"
+echo ""
+echo "🎉 Happy deploying!" 
