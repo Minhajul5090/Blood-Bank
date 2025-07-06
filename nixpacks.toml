@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["python39", "python39Packages.pip"]
+
+[phases.install]
+cmds = ["pip install -r requirements_production.txt"]
+
+[phases.build]
+cmds = ["python manage.py collectstatic --noinput", "python manage.py migrate"]
+
+[start]
+cmd = "gunicorn bloodbankmanagement.wsgi --bind 0.0.0.0:$PORT" 
