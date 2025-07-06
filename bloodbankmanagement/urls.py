@@ -21,6 +21,9 @@ from django.conf.urls.static import static
 from blood import views
 from blood.auth_views import admin_login_view, donor_login_view, patient_login_view
 urlpatterns = [
+    # Health check endpoint for Railway
+    path('health/', views.health_check, name='health_check'),
+    
     path('admin/', admin.site.urls),
 
     

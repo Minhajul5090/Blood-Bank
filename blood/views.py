@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect,reverse
 from . import forms,models
 from django.db.models import Sum,Q
 from django.contrib.auth.models import Group
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.conf import settings
 from datetime import date, timedelta
@@ -14,6 +14,10 @@ from donor import forms as dforms
 from patient import forms as pforms
 from django.contrib import messages
 from .auth_views import admin_required, donor_required, patient_required
+
+def health_check(request):
+    """Simple health check endpoint for Railway"""
+    return JsonResponse({'status': 'healthy', 'message': 'Blood Bank Management System is running'})
 
 def home_view(request):
     x=models.Stock.objects.all()
