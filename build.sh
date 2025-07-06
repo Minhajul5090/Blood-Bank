@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Build script for Railway deployment
-echo "🚀 Starting build process..."
+# Blood Bank Management System - Build Script for Railway
+echo "🚀 Building Blood Bank Management System..."
 
 # Install dependencies
 echo "📦 Installing dependencies..."
@@ -11,8 +11,4 @@ pip install -r requirements_production.txt
 echo "📁 Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Run migrations
-echo "🗄️ Running database migrations..."
-python manage.py migrate
-
-echo "✅ Build process completed!" 
+echo "✅ Build completed successfully!" 
