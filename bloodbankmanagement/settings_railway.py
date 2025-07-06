@@ -15,6 +15,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'OPTIONS': {
+            'timeout': 20,  # Add timeout for SQLite
+        }
     }
 }
 
@@ -47,4 +50,13 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'INFO',
     },
-} 
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
+
+# Disable whitenoise for Railway (can cause issues)
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' 
