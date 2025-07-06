@@ -16,13 +16,22 @@ from django.contrib import messages
 from .auth_views import admin_required, donor_required, patient_required
 
 def health_check(request):
-    """Simple health check endpoint for Railway - no database dependencies"""
-    return JsonResponse({
-        'status': 'healthy', 
+    """Minimal health check endpoint for Railway - no imports"""
+    import json
+    from django.http import HttpResponse
+    
+    response_data = {
+        'status': 'healthy',
         'message': 'Blood Bank Management System is running',
-        'timestamp': str(datetime.now()),
+        'service': 'django',
         'version': '1.0.0'
-    })
+    }
+    
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type='application/json',
+        status=200
+    )
 
 def root_health_check(request):
     """Root endpoint for Railway health checks"""
