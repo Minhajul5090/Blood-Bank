@@ -155,5 +155,13 @@ def patient_edit_profile_view(request):
         'user_form': user_form,
         'patient_form': patient_form,
         'patient': patient,
+        'debug': True,  # Add debug flag
     }
+    
+    # Debug: Print context to see what's being passed
+    print("Context keys:", context.keys())
+    print("Patient object:", patient)
+    print("User form fields:", user_form.fields.keys())
+    print("Patient form fields:", patient_form.fields.keys())
+    
     return render(request, 'patient/edit_profile_simple.html', context)

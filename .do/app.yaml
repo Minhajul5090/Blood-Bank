@@ -1,0 +1,20 @@
+name: bloodbank-management
+services:
+  - name: web
+    source_dir: /
+    github:
+      repo: your-username/your-repo
+      branch: main
+    run_command: gunicorn bloodbankmanagement.wsgi --log-file -
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: SECRET_KEY
+        value: ${SECRET_KEY}
+      - key: DATABASE_URL
+        value: ${DATABASE_URL}
+      - key: EMAIL_HOST_USER
+        value: ${EMAIL_HOST_USER}
+      - key: EMAIL_HOST_PASSWORD
+        value: ${EMAIL_HOST_PASSWORD}
